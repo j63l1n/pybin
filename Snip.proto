@@ -1,0 +1,20 @@
+//Snip.proto
+
+syntax = "proto3";
+package snippet;
+
+service Snip {
+  rpc addSnip(Snippet) returns (SnipID);
+  rpc getSnip(SnipID) returns (Snippet);
+
+}
+
+message Snippet {
+  string id = 1;
+  string snippet = 2;
+  string description = 3;
+}
+
+message SnipID {
+  string value = 1;
+}
