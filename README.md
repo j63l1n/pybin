@@ -48,11 +48,8 @@ Snippets are not big so average 15 kilobyte
 |snippet id|snip_id|None|Snippet ID for the snippet|
 |TTL|snip_ttl|12|Time to live for snippet in hours|
 
-### K/V store
 
-1. key user_id
-2. dataobj (protobuf)
-
+### k/v store
 Needs to be redundant. Eventually consistent ok.<br>
 Objects should support TTL.
 
@@ -69,18 +66,20 @@ successful push trig an upload to history DB.<br>
 
 ![pybin highlevel](./images/pybin2_1.png)
 ### Component design
+![pybin_component](./images/pybin1_1.png)
 ### App layer
-Application server relies on k/v store to initiate or retrieve user baselevel information,
-e.g. max(counter)/used id's/ so it can retrieve existing buffer and push on to the stack.<br>
+Application server relies on k/v store for meta information, location of snip.
 Linter will be used and will not commit until user corrects errors. After success adding blob
 to k/v store and sending off to log pipeline. Keys will be simple using user_id with incremented snip number.
 
 
 ### Partitioning
+k/v should have redundancy and partitioning built in.
 ### Load balancer
 ### Metrics
 Evaluate sumo-logic for postgres monitors etc.<br>
 Prometheus<br>
+Datadog
 ### Cache
 
 ### Future
