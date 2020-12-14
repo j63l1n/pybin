@@ -18,6 +18,7 @@ Key-value store to be used to maintain snippet location, metadata.
 <br>
 Microservices should use gRPC when possible.<br>
 Prefer self balanced trees for k/v store.<br>
+Protobuf for de/serializing<br> 
 
 ### Capacity planning
 #### Capacity (+ memory req)
@@ -28,7 +29,7 @@ Prefer self balanced trees for k/v store.<br>
   
 #### Size limits
 Snippets are not big so average 15 kilobyte
-* 100k writes at 15 kilobytes = 1.5 GB / day
+* 100k writes at 15 kilobytes = 1.5 GB / day = ~ .5 TB / year
 * Max snip size 10MB
 
 #### Speed limits
@@ -72,6 +73,9 @@ Application server relies on k/v store for meta information, location of snip.
 Linter will be used and will not commit until user corrects errors. After success adding blob
 to k/v store and sending off to log pipeline. Keys will be simple using user_id with incremented snip number.
 
+### URL shortening
+* Base64, 6 letters ~ 68.7B possible strings
+* snip_id, real_url, short_url
 
 ### Partitioning
 k/v should have redundancy and partitioning built in.
@@ -81,6 +85,8 @@ Evaluate sumo-logic for postgres monitors etc.<br>
 Prometheus<br>
 Datadog
 ### Cache
+* _memcached_?
+* _mcrouter_?
 
 ### Future
 * Duplication detection of snippet MD5
