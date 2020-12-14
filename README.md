@@ -24,15 +24,27 @@ Prefer self balanced trees for k/v store.<br>
 
 ### Capacity planning
 #### Capacity (+ memory req)
+* 1 Million users
 * Traffic Estimates
     1. 100k Snippets per day (100k / day ~= 1 snippets/sec )
     2. 8:1 read versus write (800k reads / day ~= 9 reads/sec )
-* Rate limit based on user_id (10/sec write, 80 /sec read)  
+  
+* Fully built out k/v:
+   * around 1100 servers for key value
+   * Given 80/20 rule it is likely that given TTL will cause a 20% full capacity e.g. 220 servers
+
+* Fully built out DB
+   * it is reasonable to believe that DB's will be 4 x size requirements of 240M * 1M *4 / 200 servers
+  gives 5TB database per server with copies.
 
 #### Size limits
 * Max 10M of snippet, 2M of description Max per user (10M+2M) * 20 = 240M
+* 1M users gives storage requirements to 240TB
+
 #### Speed limits
-#### Bandwidth?
+* Rate limit based on user_id (60/min write, 800 /min read)
+   * Using sliding window with counters, normalized to minutes
+      * requires 2 x 4 bytes for epoch time and 2 bytes for counter
 
 ### API's
 `addSnippet(api_dev_key,snip_desc,snip_data,user_id=None,snip_id=None,snip_ttl=12`
@@ -55,8 +67,10 @@ Needs to be redundant. Eventually consistent ok.<br>
 Objects should support TTL.
 
 ### Database Design
-Snip_id should be a hash to simplify partitioning.
+Snip_id should be a hash to simplify partitioning.<br>
+_Using url-shortening we can store detected github url that contains duplicate._<br>
 ![pybin_db](./images/pybindb_2.png)
+
 
 ### High level design
 Service will require registration (google, facebook)<br>
